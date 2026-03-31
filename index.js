@@ -83,9 +83,20 @@ client.on("interactionCreate", async interaction => {
   if (interaction.isChatInputCommand() && interaction.commandName === "registrar_equipo") {
 
   // 🔒 SOLO ADMIN
-  if (!interaction.member.permissions.has("Administrator")) {
+  if (interaction.isChatInputCommand() && interaction.commandName === "registrar_equipo") {
+
+  const ROLES_PERMITIDOS = [
+    "1034277669359059055",
+    "1452911512162140333"
+  ];
+
+  const tienePermiso = ROLES_PERMITIDOS.some(roleId =>
+    interaction.member.roles.cache.has(roleId)
+  );
+
+  if (!tienePermiso) {
     return interaction.reply({
-      content: "❌ Solo el administrador puede crear equipos",
+      content: "❌ Solo el ADMIN SUPREMO puede crear equipos",
       ephemeral: true
     });
   }
