@@ -81,10 +81,25 @@ client.on("interactionCreate", async interaction => {
 
   // ===== REGISTRAR =====
   if (interaction.isChatInputCommand() && interaction.commandName === "registrar_equipo") {
-    const nombre = interaction.options.getString("nombre");
-    const emoji = interaction.options.getString("emoji");
-    const rol = interaction.options.getRole("rol");
 
+  // 🔒 SOLO ADMIN
+  if (!interaction.member.permissions.has("Administrator")) {
+    return interaction.reply({
+      content: "❌ Solo el administrador puede crear equipos",
+      ephemeral: true
+    });
+  }
+
+  const nombre = interaction.options.getString("nombre");
+  const emoji = interaction.options.getString("emoji");
+  const rol = interaction.options.getRole("rol");
+
+  const equipos = obtenerEquipos();
+  equipos.push({ id: Date.now(), nombre, emoji, rol: rol.id });
+  guardarEquipos(equipos);
+
+  return interaction.reply(`✅ ${emoji} ${nombre} registrado`);
+}
     const equipos = obtenerEquipos();
     equipos.push({ id: Date.now(), nombre, emoji, rol: rol.id });
     guardarEquipos(equipos);
